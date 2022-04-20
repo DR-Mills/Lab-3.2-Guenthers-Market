@@ -40,8 +40,6 @@ System.out.println(item2);
 letsShop.printMenu();
 
 
-
-
 		
 
 	}

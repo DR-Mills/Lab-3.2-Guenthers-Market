@@ -4,28 +4,33 @@ import java.util.TreeMap;
 public class MultiMap {
 	static TreeMap<Integer, String> intKeyMap = new TreeMap<>();
 	static TreeMap<String, Double> itemKeyMap = new TreeMap<>();
+	
 
-	public MultiMap() { 
+	public MultiMap() { //constructor
 		InitializeMapData();
 	}
 
 	private static void InitializeMapData() {
-		addItem("Apple", 2.31);
-		addItem("Banana", 0.94);
-		addItem("Blueberry", 4.39);
-		addItem("Durian", 8.99);
-		addItem("Mango", 1.76);
-		addItem("Raspberry", 4.91);
-		addItem("Broccoli", 1.44);
-		addItem("Bok Choy", 3.23);
-		addItem("Cucumber", 0.62);
-		addItem("Kale", 2.23);
-	}
-
-	public static void addItem(String str, Double d) {
-		int i = intKeyMap.size();
-		intKeyMap.put(i + 1, str);
-		itemKeyMap.put(str, d);
+		intKeyMap.put(1, "Apple");
+		intKeyMap.put(2, "Banana");
+		intKeyMap.put(3, "Blueberry");
+		intKeyMap.put(4, "Durian");
+		intKeyMap.put(5, "Mango");
+		intKeyMap.put(6, "Raspberry");
+		intKeyMap.put(7, "Broccoli");
+		intKeyMap.put(8, "Bok Choy");
+		intKeyMap.put(9, "Cucumber");
+		intKeyMap.put(10, "Kale");
+		itemKeyMap.put("Apple", 2.31);
+		itemKeyMap.put("Banana", .94);
+		itemKeyMap.put("Blueberry", 4.39);
+		itemKeyMap.put("Durian", 8.99);
+		itemKeyMap.put("Mango", 1.76);
+		itemKeyMap.put("Raspberry", 4.91);
+		itemKeyMap.put("Broccoli", 1.44);
+		itemKeyMap.put("Bok Choy", 3.23);
+		itemKeyMap.put("Cucumber", .62);
+		itemKeyMap.put("Kale", 2.23);
 	}
 
 	public String callItem(int n) {
@@ -33,20 +38,22 @@ public class MultiMap {
 		Double getPrice = itemKeyMap.get(getItem);
 		return String.format("%-15s$%.2f", getItem, getPrice);
 	}
-
+	
 	public String callItem(String str) {
 		Double getPrice = itemKeyMap.get(str);
 		return String.format("%-15s$%.2f", str, getPrice);
 	}
-
+	
+	
 	public void printMenu() {
 		System.out.printf("%n%-8s%-15s%-15s%n", "No.", "Item", "Price");
 		for (Entry<Integer, String> entry : intKeyMap.entrySet()) {
 			String num = String.valueOf(entry.getKey());
 			String item = entry.getValue();
 			System.out.printf("%-8s%-15s%n", num, callItem(item));
-		}
-
 	}
 
+	}
+	
+	
 }
