@@ -30,16 +30,6 @@
 public class GuenthersMarket {
 
 	public static void main(String[] args) {
-MultiMap letsShop = new MultiMap();
-
-String item1 = letsShop.callItem(1);
-String item2 = letsShop.callItem("Banana");
-
-System.out.println(item1);
-System.out.println(item2);
-letsShop.printMenu();
-
-
 		
 
 	}
