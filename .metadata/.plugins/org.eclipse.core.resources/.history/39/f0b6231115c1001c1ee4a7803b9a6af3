@@ -1,0 +1,52 @@
+import java.util.Map.Entry;
+import java.util.TreeMap;
+
+public class MultiMap {
+	static TreeMap<Integer, String> intKeyMap = new TreeMap<>();
+	static TreeMap<String, Double> itemKeyMap = new TreeMap<>();
+
+	public MultiMap() { 
+		InitializeMapData();
+	}
+
+	private static void InitializeMapData() {
+		addItem("Apple", 2.31);
+		addItem("Banana", 0.94);
+		addItem("Blueberry", 4.39);
+		addItem("Durian", 8.99);
+		addItem("Mango", 1.76);
+		addItem("Raspberry", 4.91);
+		addItem("Broccoli", 1.44);
+		addItem("Bok Choy", 3.23);
+		addItem("Cucumber", 0.62);
+		addItem("Kale", 2.23);
+	}
+
+	public static void addItem(String str, Double d) {
+		int i = intKeyMap.size();
+		intKeyMap.put(i + 1, str);
+		itemKeyMap.put(str, d);
+	}
+
+	public String callItem(int n) {
+		String getItem = intKeyMap.get(n);
+		Double getPrice = itemKeyMap.get(getItem);
+		return String.format("%-15s$%.2f", getItem, getPrice);
+	}
+
+	public String callItem(String str) {
+		Double getPrice = itemKeyMap.get(str);
+		return String.format("%-15s$%.2f", str, getPrice);
+	}
+
+	public void printMenu() {
+		System.out.printf("%n%-8s%-15s%-15s%n", "No.", "Item", "Price");
+		for (Entry<Integer, String> entry : intKeyMap.entrySet()) {
+			String num = String.valueOf(entry.getKey());
+			String item = entry.getValue();
+			System.out.printf("%-8s%-15s%n", num, callItem(item));
+		}
+
+	}
+
+}

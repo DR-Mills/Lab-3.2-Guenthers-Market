@@ -1,0 +1,61 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Map.Entry;
+import java.util.TreeMap;
+
+public class MultiMap {
+	static TreeMap<Integer, String> intKeyMap = new TreeMap<>();
+	static TreeMap<String, Double> itemKeyMap = new TreeMap<>();
+	ArrayList<String> shoppingCartItemName = new ArrayList<>();
+	ArrayList<Double> shoppingCartItemPrice = new ArrayList<>();
+	ArrayList<Integer> shoppingCartItemQuantity = new ArrayList<>();
+
+	public MultiMap() { 
+		InitializeMapData();
+	}
+
+	private static void InitializeMapData() {
+		addItemToMap("Apple", 2.31);
+		addItemToMap("Banana", 0.94);
+		addItemToMap("Blueberry", 4.39);
+		addItemToMap("Durian", 8.99);
+		addItemToMap("Mango", 1.76);
+		addItemToMap("Raspberry", 4.91);
+		addItemToMap("Broccoli", 1.44);
+		addItemToMap("Bok Choy", 3.23);
+		addItemToMap("Cucumber", 0.62);
+		addItemToMap("Kale", 2.23);
+	}
+
+	public static void addItemToMap(String str, Double d) {
+		int i = intKeyMap.size();
+		intKeyMap.put(i + 1, str);
+		itemKeyMap.put(str, d);
+	}
+
+	public String callItem(int n) {
+		String getItem = intKeyMap.get(n);
+		Double getPrice = itemKeyMap.get(getItem);
+		return String.format("%-15s$%.2f", getItem, getPrice);
+	}
+
+	public String callItem(String str) {
+		Double getPrice = itemKeyMap.get(str);
+		return String.format("%-15s$%.2f", str, getPrice);
+	}
+
+	public void printMenu() {
+		System.out.printf("%n%-8s%-15s%-15s%n", "No.", "Item", "Price");
+		for (Entry<Integer, String> entry : intKeyMap.entrySet()) {
+			String num = String.valueOf(entry.getKey());
+			String item = entry.getValue();
+			System.out.printf("%-8s%-15s%n", num, callItem(item));
+		}
+	}
+
+	public void addItemToCart(String str) {
+		String[] strToArray = str.split(" ");
+		System.out.println(strToArray[0]+"xxx"+strToArray[1]+"xxx"+strToArray[2]);
+		}
+
+}

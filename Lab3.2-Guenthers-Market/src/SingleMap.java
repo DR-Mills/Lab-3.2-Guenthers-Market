@@ -38,7 +38,7 @@ public class SingleMap {
 		return String.format("%-15s$%-15s", item, price);
 	}
 
-	public String returnItemAndPrice(String str) {
+	public String returnItemAndPrice(String str) { // can use ketSet instead of entrySet to return key
 		str = str.toLowerCase();
 		for (Entry<Integer, String[]> item : intKeyMap.entrySet()) {
 			String valueArrayAsLowerCaseString = Arrays.toString(item.getValue()).toLowerCase();

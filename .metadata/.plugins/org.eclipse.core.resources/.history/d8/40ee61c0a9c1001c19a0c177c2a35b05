@@ -1,0 +1,134 @@
+import java.util.ArrayList;
+import java.util.InputMismatchException;
+import java.util.Scanner;
+
+// Task: Make a shopping list application which uses collections to store your items.
+// What will the application do?
+// * Display a list of at least 8 item names and prices.
+// * Ask the user to enter an item name
+//     - If that item exists, display that item and price and add that item and its price to
+//the user’s order.
+//     - If that item doesn’t exist, display an error and re-prompt the user. (Display the
+//menu again if you’d like.)
+// * Ask if they want to add another. Repeat if they do. (User can enter an item more than
+//once; we’re not taking quantity at this point.)
+// * When they’re done adding items, display a list of all items ordered with prices in
+//columns.
+// * Display the average price of items ordered.
+//Build Specifications
+// * Use a Map to keep track of the menu of items. It should have a String key (for item
+//name) and Double value (for item price).
+// * Use parallel ArrayLists (one of strings, one of doubles) to store the items ordered and
+//their prices.
+// * Write 3 methods to find 1) the average cost of the items ordered and the indexes of the
+//2) highest and 3) lowest cost items.
+//Extended Challenges
+// * Implement a menu system so the user can enter just a letter or number for the item.
+// * Make a third ArrayList for quantities of items ordered and allow the user to order more
+//than one at a time.
+//     - Extended: If they order an item already in their cart, increase the quantity rather
+//than adding another entry.
+// * Display the most and least expensive item ordered.
+
+public class GuenthersMarket {
+	private int shoppingCartItemsCount = 0;
+	private double shoppingCartItemsTotal = 0.00;
+	private static final String WELCOME_MSG = "Welcome to Guenther's Market!";
+	private static final String PURCHASE_MSG = "What item would you like? (enter No. or item name): ";
+	private static final String NO_ITEM_MSG = "Sorry, we don't have that item. Please try again.\n";
+	private static final String ORDER_MORE_MSG = "Would you like to order anything else? (y/n): ";
+
+	ArrayList<String> shoppingCartItemName = new ArrayList<>();
+	ArrayList<Double> shoppingCartItemPrice = new ArrayList<>();
+	ArrayList<Integer> shoppingCartItemQuantity = new ArrayList<>();
+
+	static Scanner scnr = new Scanner(System.in);
+	static MultiMap letsShop = new MultiMap();
+
+	public static void main(String[] args) {
+
+		System.out.println(WELCOME_MSG);
+		letsShop.printMenu();
+		takeOrder();
+//		promptForReorder();
+		totalCart();
+
+	}
+
+	private static void updateShoppingCart(int i) {
+		System.out.println(i);
+	}
+
+	private static void updateShoppingCart(String str) {
+		System.out.println(str);
+	}
+
+	private static void takeOrder() {
+		boolean notFinishedShopping = true;
+		boolean orderIncomplete = true;
+		boolean readyToPay = false;
+
+		// prints what do you want and takes input
+// Master loop START
+		do {
+			do {
+				System.out.print(PURCHASE_MSG);
+				String userInput = scnr.nextLine();
+
+				// verifies input and updates cart or prints error message
+				try {
+					int userInputInt = Integer.valueOf(userInput);
+					if (letsShop.doesItemExist(userInputInt)) {
+						updateShoppingCart(userInputInt);
+						orderIncomplete = false;
+					} else {
+						System.out.println(NO_ITEM_MSG);
+					}
+				} catch (NumberFormatException e) {
+					userInput = capitalize(userInput);
+					if (letsShop.doesItemExist(userInput)) {
+						updateShoppingCart(userInput);
+						orderIncomplete = false;
+					} else
+						System.out.println(NO_ITEM_MSG);
+				}
+
+			} while (orderIncomplete); // while still adding items
+			orderIncomplete = true;
+			// mini loop start
+			// asks if user wants more items
+			do {
+				System.out.println(ORDER_MORE_MSG);
+				String orderAgain = scnr.nextLine();
+
+				// reloop whole order process if yes
+				// end if no
+				// else print error and reloop if user wants more items
+				if (orderAgain.equalsIgnoreCase("y")) {
+					notFinishedShopping = false;
+				} else if (orderAgain.equalsIgnoreCase("n")) {
+					notFinishedShopping = false;
+					orderIncomplete = false;
+				} else {
+					notFinishedShopping = true;
+					System.out.println("Please enter \"y\" or \"n\".");
+				}
+			} while (notFinishedShopping);
+		} while (orderIncomplete);
+		// if yes, master loop = true
+		// if no, master loop and mini loop = false
+		// if other, mini loop = true
+		// mini loop end
+// Master loop END
+//		---------should exit here to calc cart total
+	}
+
+	public static void totalCart() {
+		System.out.println("total");
+	}
+
+	public static String capitalize(String word) {
+		return word.substring(0, 1).toUpperCase() + word.substring(1).toLowerCase();
+	}
+
+}

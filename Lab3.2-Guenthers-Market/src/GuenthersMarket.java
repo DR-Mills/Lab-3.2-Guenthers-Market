@@ -1,3 +1,4 @@
+
 // Task: Make a shopping list application which uses collections to store your items.
 // What will the application do?
 // * Display a list of at least 8 item names and prices.
@@ -26,24 +27,126 @@
 //than adding another entry.
 // * Display the most and least expensive item ordered.
 
+import java.util.ArrayList;
+import java.util.InputMismatchException;
+import java.util.Scanner;
 
 public class GuenthersMarket {
+	private int shoppingCartItemsCount = 0;
+	private double shoppingCartItemsTotal = 0.00;
+	private static final String WELCOME_MSG = "Welcome to Guenther's Market!";
+	private static final String PURCHASE_MSG = "What item would you like? (enter No. or item name): ";
+	private static final String NO_ITEM_MSG = "Sorry, we don't have that item. Please try again.\n";
+	private static final String ORDER_MORE_MSG = "Would you like to order anything else? (y/n): ";
+
+	private static ArrayList<String> shoppingCartItemName = new ArrayList<>();
+	private static ArrayList<Double> shoppingCartItemPrice = new ArrayList<>();
+	private static ArrayList<Integer> shoppingCartItemQuantity = new ArrayList<>();
+
+	static Scanner scnr = new Scanner(System.in);
+	static MultiMap letsShop = new MultiMap();
 
 	public static void main(String[] args) {
-MultiMap letsShop = new MultiMap();
 
-String item1 = letsShop.callItem(1);
-String item2 = letsShop.callItem("Banana");
+		System.out.println(WELCOME_MSG);
+		letsShop.printMenu();
+		takeOrder();
+		totalCart();
 
-System.out.println(item1);
-System.out.println(item2);
-letsShop.printMenu();
+	}
 
+	private static void updateShoppingCart(int i) {
+		String item = letsShop.intKeyMap.get(i);
+		double price = letsShop.itemKeyMap.get(item);
+		int itemIndex = shoppingCartItemName.indexOf(item);
+		if (!shoppingCartItemName.contains(item)) {
+			shoppingCartItemName.add(item);
+			shoppingCartItemPrice.add(price);
+			shoppingCartItemQuantity.add(1);
+		} else {
+			int currentItemCount = shoppingCartItemQuantity.get(itemIndex);
+			currentItemCount++;
+			shoppingCartItemQuantity.set(itemIndex, currentItemCount);
+		}
+		System.out.println("Adding " + item.toLowerCase() + " to cart at $" + price);
+	}
 
+	private static void updateShoppingCart(String str) {
+		double price = letsShop.itemKeyMap.get(str);
+		int itemIndex = shoppingCartItemName.indexOf(str);
+		if (!shoppingCartItemName.contains(str)) {
+			shoppingCartItemName.add(str);
+			shoppingCartItemPrice.add(price);
+			shoppingCartItemQuantity.add(1);
+		} else {
+			int currentItemCount = shoppingCartItemQuantity.get(itemIndex);
+			currentItemCount++;
+			shoppingCartItemQuantity.set(itemIndex, currentItemCount);
+		}
+		System.out.println("Adding " + str + " to cart at $" + price);
+	}
 
+	private static void takeOrder() {
+		boolean notFinishedShopping = true;
+		boolean orderIncomplete = true;
+		boolean readyToPay = false;
 
-		
+		// prints what do you want and takes input
+// Master loop START
+		do {
+			do {
+				System.out.print(PURCHASE_MSG);
+				String userInput = scnr.nextLine();
 
+				// verifies input and updates cart or prints error message
+				try {
+					int userInputInt = Integer.valueOf(userInput);
+					if (letsShop.doesItemExist(userInputInt)) {
+						updateShoppingCart(userInputInt);
+						orderIncomplete = false;
+					} else {
+						System.out.println(NO_ITEM_MSG);
+					}
+				} catch (NumberFormatException e) {
+					userInput = capitalize(userInput);
+					if (letsShop.doesItemExist(userInput)) {
+						updateShoppingCart(userInput);
+						orderIncomplete = false;
+					} else
+						System.out.println(NO_ITEM_MSG);
+				}
+
+			} while (orderIncomplete);
+			
+			orderIncomplete = true;
+
+			do {
+				System.out.println(ORDER_MORE_MSG);
+				String orderAgain = scnr.nextLine();
+
+				if (orderAgain.equalsIgnoreCase("y")) {
+					notFinishedShopping = false;
+					letsShop.printMenu();
+				} else if (orderAgain.equalsIgnoreCase("n")) {
+					notFinishedShopping = false;
+					orderIncomplete = false;
+				} else {
+					notFinishedShopping = true;
+					System.out.println("Please enter \"y\" or \"n\".");
+				}
+			} while (notFinishedShopping);
+		} while (orderIncomplete);
+	}
+
+	public static void totalCart() {
+		System.out.println("total");
+		System.out.println(shoppingCartItemName.toString());
+		System.out.println(shoppingCartItemPrice.toString());
+		System.out.println(shoppingCartItemQuantity.toString());
+	}
+
+	public static String capitalize(String word) {
+		return word.substring(0, 1).toUpperCase() + word.substring(1).toLowerCase();
 	}
 
 }
