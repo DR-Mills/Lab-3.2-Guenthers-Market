@@ -29,7 +29,6 @@
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -56,73 +55,7 @@ public class GuenthersMarket {
 		totalCart();
 
 	}
-	
-	// Takes user order, entered as either an int or a String, validates
-	// the item exists in the MultiMap, and passes it to the overloaded
-	// updateShoppingCart() method.
-	// Asks user if they want to order more, if yes, order process repeats
-	// if no, loop takeOrder ends.
-	private static void takeOrder() {
-		boolean notFinishedShopping = true;
-		boolean orderIncomplete = true;
-		boolean readyToPay = false;
-		
-// Main loop START
-		do {
-			do {
-				System.out.print(PURCHASE_MSG);
-				String userInput = scnr.nextLine();
-				
-				// attempts to pass int to overloaded doesItemExist() method
-				// if input is a string, a NumberFormatExeption is caught
-				// and the value is passed as a String instead.
-				// if the item does exist, the updateShoppingCart() is called
-				// with the int or String value
-				try {
-					int userInputInt = Integer.valueOf(userInput);
-					if (letsShop.doesItemExist(userInputInt)) {
-						updateShoppingCart(userInputInt);
-						orderIncomplete = false;
-					} else {
-						System.out.println(NO_ITEM_MSG);
-					}
-				} catch (NumberFormatException e) {
-					userInput = capitalize(userInput);
-					if (letsShop.doesItemExist(userInput)) {
-						updateShoppingCart(userInput);
-						orderIncomplete = false;
-					} else
-						System.out.println(NO_ITEM_MSG);
-				}
-				
-			} while (orderIncomplete);
-			
-			orderIncomplete = true;
-			
-			do {
-				System.out.println(ORDER_MORE_MSG);
-				String orderAgain = scnr.nextLine();
-				
-				if (orderAgain.equalsIgnoreCase("y")) {
-					notFinishedShopping = false;
-					letsShop.printMenu();
-				} else if (orderAgain.equalsIgnoreCase("n")) {
-					notFinishedShopping = false;
-					orderIncomplete = false;
-				} else {
-					notFinishedShopping = true;
-					System.out.println("Please enter \"y\" or \"n\".");
-				}
-			} while (notFinishedShopping);
-		} while (orderIncomplete);
-	}
 
-	// Accepts an int value.
-	// checks if shoppingCartItemName ArrayList contains the item being purchased.
-	// if item does not exist, the item, price, and quantity are all added to the
-	// three respective parallel ArrayLists.
-	// If the item does exist already, then only the quantity value in
-	// shoppingCartItemQuantity is incremented by 1.
 	private static void updateShoppingCart(int i) {
 		String item = letsShop.intKeyMap.get(i);
 		double price = letsShop.itemKeyMap.get(item);
@@ -139,12 +72,6 @@ public class GuenthersMarket {
 		System.out.println("Adding " + item.toLowerCase() + " to cart at $" + price);
 	}
 
-	// Accepts a String value.
-	// checks if shoppingCartItemName ArrayList contains the item being purchased.
-	// if item does not exist, the item, price, and quantity are all added to the
-	// three respective parallel ArrayLists.
-	// If the item does exist already, then only the quantity value in
-	// shoppingCartItemQuantity is incremented by 1.
 	private static void updateShoppingCart(String str) {
 		double price = letsShop.itemKeyMap.get(str);
 		int itemIndex = shoppingCartItemName.indexOf(str);
@@ -160,9 +87,58 @@ public class GuenthersMarket {
 		System.out.println("Adding " + str + " to cart at $" + price);
 	}
 
-	//calculates shopping cart item price and quantity total and
-	// prints the average to the console
-	// also prints index of highest and lowest priced items in cart.
+	private static void takeOrder() {
+		boolean notFinishedShopping = true;
+		boolean orderIncomplete = true;
+		boolean readyToPay = false;
+
+		// prints what do you want and takes input
+// Master loop START
+		do {
+			do {
+				System.out.print(PURCHASE_MSG);
+				String userInput = scnr.nextLine();
+
+				// verifies input and updates cart or prints error message
+				try {
+					int userInputInt = Integer.valueOf(userInput);
+					if (letsShop.doesItemExist(userInputInt)) {
+						updateShoppingCart(userInputInt);
+						orderIncomplete = false;
+					} else {
+						System.out.println(NO_ITEM_MSG);
+					}
+				} catch (NumberFormatException e) {
+					userInput = capitalize(userInput);
+					if (letsShop.doesItemExist(userInput)) {
+						updateShoppingCart(userInput);
+						orderIncomplete = false;
+					} else
+						System.out.println(NO_ITEM_MSG);
+				}
+
+			} while (orderIncomplete);
+
+			orderIncomplete = true;
+
+			do {
+				System.out.println(ORDER_MORE_MSG);
+				String orderAgain = scnr.nextLine();
+
+				if (orderAgain.equalsIgnoreCase("y")) {
+					notFinishedShopping = false;
+					letsShop.printMenu();
+				} else if (orderAgain.equalsIgnoreCase("n")) {
+					notFinishedShopping = false;
+					orderIncomplete = false;
+				} else {
+					notFinishedShopping = true;
+					System.out.println("Please enter \"y\" or \"n\".");
+				}
+			} while (notFinishedShopping);
+		} while (orderIncomplete);
+	}
+
 	public static void totalCart() {
 		double total = 0.0;
 		for (double d : shoppingCartItemPrice) {
@@ -172,21 +148,16 @@ public class GuenthersMarket {
 		for (int i : shoppingCartItemQuantity) {
 			quantity = quantity + i;
 		}
-		double average = total / quantity;
-		System.out.printf("%s$%.2f%n", "Average price per item in order was ", average);
-		System.out.println("The index of the highest priced item in cart is " + returnIndexOfHighItem() + ".");
-		System.out.println("The index of the lowest priced item in cart is " + returnIndexOfLowItem() + ".");
+		double average = quantity / total;
+		System.out.println(total + " = total");
+		System.out.println(quantity + " = quantity");
+		System.out.printf("%s $%.2f%n", "Average price per item in order was ", average);
+
+		System.out.println(shoppingCartItemName.toString());
+		System.out.println(shoppingCartItemPrice.toString());
+		System.out.println(shoppingCartItemQuantity.toString());
 	}
 
-	public static int returnIndexOfHighItem() {
-		double highest = Collections.max(shoppingCartItemPrice);
-		return shoppingCartItemPrice.indexOf(highest);
-	}
-	
-	public static int returnIndexOfLowItem() {
-		double lowest = Collections.min(shoppingCartItemPrice);
-		return shoppingCartItemPrice.indexOf(lowest);
-	}
 	public static String capitalize(String word) {
 		return word.substring(0, 1).toUpperCase() + word.substring(1).toLowerCase();
 	}
